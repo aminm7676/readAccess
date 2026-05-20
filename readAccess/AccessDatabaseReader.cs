@@ -1,4 +1,6 @@
-﻿using System.Data.OleDb;
+﻿using System.Data.Odbc;
+using System.Data.OleDb;
+using System.Runtime.InteropServices;
 
 namespace readAccess
 {
@@ -8,7 +10,13 @@ namespace readAccess
                where T : new()
         {
             // Replace with your database file path
-            string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={tempPath};";
+
+            var odbcDriver = RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                ? "MDBTools"   // Linux driver name
+                : "Microsoft Access Driver (*.mdb, *.accdb)";  // Windows driver
+
+
+            string connectionString = $"Driver={{{odbcDriver}}};DBQ={tempPath};";
             string query = $"SELECT * FROM {tableName ?? typeof(T).Name}";
             var results = new List<T>();
             try
@@ -17,18 +25,15 @@ namespace readAccess
                 var properties = typeof(T).GetProperties()
                 .ToDictionary(p => p.Name, p => p, StringComparer.OrdinalIgnoreCase);
 
-                using (OleDbConnection connection = new OleDbConnection(connectionString))
-                {
-                    connection.Open();
-                    using (OleDbCommand command = new OleDbCommand(query, connection))
+
+                    using (var conn = new OdbcConnection(connectionString))
                     {
-                        using (OleDbDataReader reader = command.ExecuteReader())
+                        conn.Open();
+                        using (var cmd = new OdbcCommand(query, conn))
+                        using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                // Access data by column name or index
-                                Console.WriteLine($"Column 1: {reader[0]}, Column 2: {reader["id"]}");
-
                                 var item = new T();
                                 for (int i = 0; i < reader.FieldCount; i++)
                                 {
@@ -46,7 +51,6 @@ namespace readAccess
                             }
                         }
                     }
-                }
 
                 return results;
             }
