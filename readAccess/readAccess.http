@@ -1,0 +1,6 @@
+@readAccess_HostAddress = http://localhost:5200
+
+GET {{readAccess_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
