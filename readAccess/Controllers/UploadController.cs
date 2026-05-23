@@ -13,7 +13,19 @@ namespace readAccess.Controllers
                 return BadRequest("No file uploaded");
 
             // Create temp file path
-            string tempFilePath = Path.GetTempFileName();
+            //  string tempFilePath = Path.GetTempFileName();
+            string rootPath = Directory.GetCurrentDirectory();
+            string uploadFolder = Path.Combine(rootPath, "Uploads"); // یا هر پوشه دلخواه
+
+            // Create directory if it doesn't exist
+            if (!Directory.Exists(uploadFolder))
+            {
+                Directory.CreateDirectory(uploadFolder);
+            }
+
+            string fileName = $"{Guid.NewGuid()}_{dto.File.FileName}";
+            string tempFilePath = Path.Combine(uploadFolder, fileName);
+
 
             try
             {
@@ -23,7 +35,8 @@ namespace readAccess.Controllers
                     await dto.File.CopyToAsync(stream);
                 }
 
-                var data = await dto.File.ReadAsAsync<CardExport>(tempFilePath);
+               // var data = await dto.File.ReadAsAsync<CardExport>(tempFilePath);
+               var data = await AccessDatabaseReader.ReadAccessFileAsync(tempFilePath);
 
                 return Ok(data.Skip((page - 1)*take).Take(take).ToList());
             }

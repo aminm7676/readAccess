@@ -1,0 +1,12 @@
+ services:
+  readaccess:
+    image: readaccess:1.0.3
+    container_name: ldaptest
+    environment:
+      ASPNETCORE_URLS: "http://+:80"
+   
+    ports:
+      - "8002:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
