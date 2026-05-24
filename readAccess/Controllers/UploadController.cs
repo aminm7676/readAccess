@@ -36,9 +36,10 @@ namespace readAccess.Controllers
                 }
 
                // var data = await dto.File.ReadAsAsync<CardExport>(tempFilePath);
-               var data = await AccessDatabaseReader.ReadAccessFileAsync(tempFilePath);
+              // var data = await AccessDatabaseReader.ReadAccessFileAsync(tempFilePath);
+                var results =await AccessReader<CardExport>.ReadFromAccessAsync(tempFilePath, "CardExport");
 
-                return Ok(data.Skip((page - 1)*take).Take(take).ToList());
+                return Ok(results.OrderBy(c=> c.id).Skip((page - 1)*take).Take(take).ToList());
             }
             catch (Exception ex)
             {

@@ -1,6 +1,6 @@
  services:
   readaccess:
-    image: readaccess:1.0.3
+    image: readaccess:latest
     container_name: ldaptest
     environment:
       ASPNETCORE_URLS: "http://+:80"

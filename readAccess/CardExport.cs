@@ -3,66 +3,67 @@
     public class CardExport
     {
         // توجه: نام دقیقاً مطابق دیتابیس
+        [ColumnName("id")]
         public int id { get; set; }  // حتماً با حروف کوچک
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("BranchCode")]
+        [ColumnName("BranchCode")]
         public string? BranchCode { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("AccCnt")]
+        [ColumnName("AccCnt")]
         public string? AccCnt { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("PAN1")]
+        [ColumnName("PAN1")]
         public string? PAN1 { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("PAN2")]
+        [ColumnName("PAN2")]
         public string? PAN2 { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("PAN3")]
+        [ColumnName("PAN3")]
         public string? PAN3 { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("PAN4")]
+        [ColumnName("PAN4")]
         public string? PAN4 { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("FName")]
+        [ColumnName("FName")]
         public string? FName { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("IMD")]
+        [ColumnName("IMD")]
         public string? IMD { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("Track2")]
+        [ColumnName("Track2")]
         public string? Track2 { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("Exp_Year")]
+        [ColumnName("Exp_Year")]
         public string? Exp_Year { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("Exp_Month")]
+        [ColumnName("Exp_Month")]
         public string? Exp_Month { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("CVV")]
+        [ColumnName("CVV")]
         public string? CVV { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("CVV2")]
+        [ColumnName("CVV2")]
         public string? CVV2 { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("CardType")]
+        [ColumnName("CardType")]
         public string? CardType { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("Sahmiehcode")]
+        [ColumnName("Sahmiehcode")]
         public string? Sahmiehcode { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("Customer_NTN")]
+        [ColumnName("Customer_NTN")]
         public string? Customer_NTN { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("GiftCardText")]
+        [ColumnName("GiftCardText")]
         public string? GiftCardText { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("GiftCardAmount")]
+        [ColumnName("GiftCardAmount")]
         public string? GiftCardAmount { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("Sheba")]
+        [ColumnName("Sheba")]
         public string? Sheba { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.Column("ReferenceNo")]
+        [ColumnName("ReferenceNo")]
         public string? ReferenceNo { get; set; }
 
     }

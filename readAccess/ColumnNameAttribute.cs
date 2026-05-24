@@ -4,6 +4,19 @@
     public class ColumnNameAttribute : Attribute
     {
         public string Name { get; }
-        public ColumnNameAttribute(string name) => Name = name;
+        public int Order { get; set; }
+
+        public ColumnNameAttribute(string name)
+        {
+            Name = name;
+            Order = int.MaxValue;
+        }
+
+        public ColumnNameAttribute(string name, int order)
+        {
+            Name = name;
+            Order = order;
+        }
     }
+
 }
