@@ -138,9 +138,14 @@ namespace readAccess
                     {
                         while (reader.Read())
                         {
+                            Console.WriteLine(reader.GetFieldType(0)?.Name); 
+                            Console.WriteLine(reader.GetFieldType(0)?.FullName); 
+
                             var item = new CardExport
                             {
                                 // بر اساس ترتیب ستون‌ها در جدول Access شما
+                                
+
                                 id = reader.GetValue(0) != DBNull.Value ? Convert.ToInt32(reader.GetValue(0)) : 0,
                                 BranchCode = reader.GetValue(1)?.ToString(),
                                 AccCnt = reader.GetValue(2)?.ToString(),

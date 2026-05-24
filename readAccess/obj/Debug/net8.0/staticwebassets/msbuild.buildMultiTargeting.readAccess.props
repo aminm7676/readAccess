@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\readAccess.props" />
-</Project>
