@@ -52,8 +52,14 @@ namespace readAccess
         private static async Task<List<T>> ReadFromLinuxAsync(string tempPath, string tableName)
         {
             var results = new List<T>();
+            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(p => p.CanRead && p.CanWrite)
+                .Select(p => p.Name)
+                .ToArray();
+
+            string columns = string.Join(", ", properties);
             string connectionString = $"Driver={{MDBTools}};DBQ={tempPath};";
-            string query = $"SELECT * FROM {tableName}";
+            string query = $"SELECT {columns} FROM {tableName}";
 
             using (var conn = new OdbcConnection(connectionString))
             {
