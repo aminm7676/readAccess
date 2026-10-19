@@ -61,6 +61,30 @@ namespace readAccess
                 using (var cmd = new OdbcCommand(query, conn))
                 using (var reader = await cmd.ExecuteReaderAsync())
                 {
+                    DataTable? schema = reader.GetSchemaTable();
+
+                    if (schema != null)
+                    {
+                        Console.WriteLine("Schema columns:");
+
+                        foreach (DataColumn col in schema.Columns)
+                        {
+                            Console.WriteLine(col.ColumnName);
+                        }
+
+                        Console.WriteLine("Schema rows:");
+
+                        foreach (DataRow row in schema.Rows)
+                        {
+                            foreach (DataColumn col in schema.Columns)
+                            {
+                                Console.Write($"{col.ColumnName}=[{row[col]}] | ");
+                            }
+
+                            Console.WriteLine();
+                        }
+                    }
+
                     int columnCount = reader.FieldCount;
                     while (await reader.ReadAsync())
                     {
@@ -85,29 +109,7 @@ namespace readAccess
                 using (var cmd = new OdbcCommand(query, conn))
                 using (var reader = await cmd.ExecuteReaderAsync())
                 {
-                    DataTable? schema = reader.GetSchemaTable();
-
-                    if (schema != null)
-                    {
-                        Console.WriteLine("Schema columns:");
-
-                        foreach (DataColumn col in schema.Columns)
-                        {
-                            Console.WriteLine(col.ColumnName);
-                        }
-
-                        Console.WriteLine("Schema rows:");
-
-                        foreach (DataRow row in schema.Rows)
-                        {
-                            foreach (DataColumn col in schema.Columns)
-                            {
-                                Console.Write($"{col.ColumnName}=[{row[col]}] | ");
-                            }
-
-                            Console.WriteLine();
-                        }
-                    }
+                   
                     while (await reader.ReadAsync())
                     {
                         var item = MapFromReaderByName((OdbcDataReader)reader);
