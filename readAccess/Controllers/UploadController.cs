@@ -7,7 +7,7 @@ namespace readAccess.Controllers
     public class UploadController : ControllerBase
     {
         [HttpPost("{page}/{take}")]
-        public async Task<IActionResult> Index([FromForm] UploadDto dto, [FromRoute] int page , [FromRoute] int take)
+        public async Task<IActionResult> Index([FromForm] UploadDto dto,  [FromRoute] int page , [FromRoute] int take)
         {
             if (dto.File == null || dto.File.Length == 0)
                 return BadRequest("No file uploaded");
@@ -37,7 +37,7 @@ namespace readAccess.Controllers
 
                // var data = await dto.File.ReadAsAsync<CardExport>(tempFilePath);
               // var data = await AccessDatabaseReader.ReadAccessFileAsync(tempFilePath);
-                var results =await AccessReader<CardExport>.ReadFromAccessAsync(tempFilePath, "CardExport");
+                var results =await AccessReader<CardExport>.ReadFromAccessAsync(tempFilePath, dto.TblName);
 
                 return Ok(results.OrderBy(c=> c.ID).Skip((page - 1)*take).Take(take).ToList());
             }
