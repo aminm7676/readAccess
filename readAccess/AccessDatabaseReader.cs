@@ -13,29 +13,17 @@ namespace readAccess
 
         static AccessReader()
         {
-            _properties = typeof(T)
-                .GetProperties()
-                .Select(p => new
-                {
-                    Property = p,
-                    Attribute = p.GetCustomAttribute<ColumnNameAttribute>()
-                })
-                .Where(x => x.Attribute != null)
-                .ToDictionary(
-                    x => x.Attribute!.Name.Trim(),
-                    x => x.Property,
-                    StringComparer.OrdinalIgnoreCase
-                );
+            _properties = typeof(T).GetProperties()
+                .ToDictionary(p => p.Name, p => p, StringComparer.OrdinalIgnoreCase);
 
-            _orderedProperties = typeof(T)
-                .GetProperties()
+            _orderedProperties = typeof(T).GetProperties()
                 .Select(p => new
                 {
                     Property = p,
-                    Attribute = p.GetCustomAttribute<ColumnNameAttribute>()
+                    ColumnAttr = p.GetCustomAttribute<ColumnNameAttribute>()
                 })
-                .Where(x => x.Attribute != null)
-                .OrderBy(x => x.Attribute!.Order)
+                .Where(x => x.ColumnAttr != null)
+                .OrderBy(x => x.ColumnAttr?.Order ?? int.MaxValue)
                 .Select(x => x.Property)
                 .ToList();
         }
@@ -107,32 +95,34 @@ namespace readAccess
             return results;
         }
 
-        private static T MapFromReaderByOrder(
-      OdbcDataReader reader,
-      int columnCount)
+        private static T MapFromReaderByOrder(OdbcDataReader reader, int columnCount)
         {
             var item = new T();
+            int currentIndex = 0;
 
-            for (int i = 0; i < columnCount; i++)
+            foreach (var prop in _orderedProperties)
             {
-                string columnName = reader.GetName(i).Trim();
-                object value = reader.GetValue(i);
-
-                Console.WriteLine(
-                    $"Index={i} | Column=[{columnName}] | Value=[{value}]");
-
-                if (_properties.TryGetValue(columnName, out var prop))
+                if (currentIndex < columnCount)
                 {
-                    SetPropertyValue(item, prop, value);
+                    try
+                    {
+                        var schema = reader.GetSchemaTable();
+                        var value = reader.GetValue(currentIndex);
+
+                        Console.WriteLine(  $"value ={value}  PPP  schema ={schema}");
+                        SetPropertyValue(item, prop, value);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"خطا در نگاشت ستون {currentIndex}: {ex.Message}");
+                    }
                 }
-                else
-                {
-                    Console.WriteLine($"ستون متناظر پیدا نشد: [{columnName}]");
-                }
+                currentIndex++;
             }
 
             return item;
         }
+
         private static T MapFromReaderByName(OdbcDataReader reader)
         {
             var item = new T();
@@ -141,7 +131,7 @@ namespace readAccess
             {
                 var columnName = reader.GetName(i);
                 if (_properties.TryGetValue(columnName, out var prop))
-                { 
+                {
                     var value = reader.GetValue(i);
                     SetPropertyValue(item, prop, value);
                 }
