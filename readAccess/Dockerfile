@@ -20,11 +20,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 USER app
-
-# This stage is used to build the service project
+ 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-
-# These packages are only needed for building (if you have any build-time dependencies)
+ 
 RUN apt-get update && apt-get install -y \
     mdbtools \
     odbc-mdbtools \
